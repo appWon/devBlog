@@ -1,0 +1,9 @@
+type Post
+  @model
+  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }]) {
+  id: ID!
+  clientId: ID!
+  markDown: String!
+  title: String!
+  createdAt: String!
+}
