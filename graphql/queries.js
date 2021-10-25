@@ -5,12 +5,10 @@ export const getPost = /* GraphQL */ `
   query GetPost($id: ID!) {
     getPost(id: $id) {
       id
-      clientId
       markDown
       title
       createdAt
       updatedAt
-      owner
     }
   }
 `
@@ -26,7 +24,7 @@ export const listPosts = /* GraphQL */ `
         markDown
         title
         createdAt
-        owner
+        tags
       }
       nextToken
     }
