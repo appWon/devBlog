@@ -8,10 +8,13 @@ export const getPost = /* GraphQL */ `
       markDown
       title
       createdAt
+      description
+      tags
       updatedAt
+      owner
     }
   }
-`
+`;
 export const listPosts = /* GraphQL */ `
   query ListPosts(
     $filter: ModelPostFilterInput
@@ -24,9 +27,12 @@ export const listPosts = /* GraphQL */ `
         markDown
         title
         createdAt
+        description
         tags
+        updatedAt
+        owner
       }
       nextToken
     }
   }
-`
+`;

@@ -8,10 +8,11 @@ export const createPost = /* GraphQL */ `
   ) {
     createPost(input: $input, condition: $condition) {
       id
-      clientId
       markDown
       title
       createdAt
+      description
+      tags
       updatedAt
       owner
     }
@@ -24,10 +25,11 @@ export const updatePost = /* GraphQL */ `
   ) {
     updatePost(input: $input, condition: $condition) {
       id
-      clientId
       markDown
       title
       createdAt
+      description
+      tags
       updatedAt
       owner
     }
@@ -40,10 +42,11 @@ export const deletePost = /* GraphQL */ `
   ) {
     deletePost(input: $input, condition: $condition) {
       id
-      clientId
       markDown
       title
       createdAt
+      description
+      tags
       updatedAt
       owner
     }

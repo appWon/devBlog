@@ -1,9 +1,16 @@
 type Post
   @model
-  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admin"] }]) {
+  @aws_iam
+  @auth(
+    rules: [
+      { allow: owner, operations: [create, read, update, delete] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  ) {
   id: ID!
-  clientId: ID!
   markDown: String!
   title: String!
   createdAt: String!
+  description: String
+  tags: [String]
 }
