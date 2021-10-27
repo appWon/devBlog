@@ -1,12 +1,4 @@
-import {
-  Typography,
-  CardHeader,
-  CardContent,
-  Avatar,
-  Card,
-  Box,
-  Skeleton,
-} from '@mui/material'
+import { Card, Box, Skeleton } from '@mui/material'
 
 const SkeletonItem = () => {
   return (

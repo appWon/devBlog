@@ -11,6 +11,7 @@ const ToastEditor = dynamic(() => import('../components/editor'), {
 const ForwardedRefComponent = React.forwardRef((props, ref) => (
   <ToastEditor {...props} forwardedRef={ref} />
 ))
+ForwardedRefComponent.displayName = `toast-ui-editor`
 
 const Write = () => {
   const editRef = React.createRef(null)

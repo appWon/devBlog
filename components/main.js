@@ -1,6 +1,6 @@
 import Header from 'next/head'
 
-const Main = ({ children, router }) => {
+const Main = ({ children }) => {
   return (
     <div>
       <Header>

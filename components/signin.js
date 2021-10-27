@@ -69,7 +69,6 @@ const SignIn = ({ setUser }) => {
         <hr />
         <Button
           variant="outlined"
-          onClick={signIn}
           sx={{
             width: '100%',
             marginTop: '20px',
