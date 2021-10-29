@@ -5,18 +5,20 @@ import { useRouter } from 'next/router'
 import { Container, Typography, Box, Button } from '@mui/material'
 import { formatDate } from '../../lib/formatTime'
 import { deletePost } from '../../graphql/mutations'
+import { listPosts, getPost } from '../../graphql/queries'
 
 const DynamicViewer = dynamic(() => import('../../components/viewer'), {
   ssr: false,
 })
 
-const Post = () => {
-  const { query, push } = useRouter()
+const Post = ({ post }) => {
+  const { push } = useRouter()
+  const { id, tags, title, createdAt, markDown } = post
 
   const handleClickUpdate = () => {
     push({
       pathname: `/write`,
-      query,
+      post,
     })
   }
 
@@ -24,7 +26,7 @@ const Post = () => {
     try {
       await API.graphql({
         query: deletePost,
-        variables: { input: { id: query.id } },
+        variables: { input: { id } },
       })
 
       push({
@@ -33,17 +35,6 @@ const Post = () => {
     } catch (err) {
       alert('권한이 없습니다.')
     }
-  }
-
-  if (!query.id) {
-    return (
-      <Container
-        maxWidth="md"
-        sx={{ display: 'flex', flexDirection: 'column' }}
-      >
-        로딩중
-      </Container>
-    )
   }
 
   return (
@@ -64,10 +55,10 @@ const Post = () => {
       </Box>
       <Box sx={{ paddingBottom: 3 }}>
         <Box sx={{ display: 'flex', padding: '0 8px' }}>
-          {typeof query.tags === 'object' ? (
-            query.tags.map(tag => (
+          {typeof tags === 'object' ? (
+            tags.map(tag => (
               <Typography
-                key={`${query.id}_${tag}`}
+                key={`${id}_${tag}`}
                 sx={{
                   fontSize: '0.875rem',
                   fontWeight: 400,
@@ -79,14 +70,14 @@ const Post = () => {
             ))
           ) : (
             <Typography
-              key={`${query.id}_${query.tags}`}
+              key={`${id}_${tags}`}
               sx={{
                 fontSize: '0.875rem',
                 fontWeight: 400,
                 marginRight: 1,
               }}
             >
-              #{query.tags}
+              #{tags}
             </Typography>
           )}
         </Box>
@@ -94,13 +85,39 @@ const Post = () => {
           component="h1"
           sx={{ fontSize: '2.5rem', fontWeight: 600, lineHeight: 1.3 }}
         >
-          {query.title}
+          {title}
         </Typography>
-        <Typography>{formatDate(query.createdAt)}</Typography>
+        <Typography>{formatDate(createdAt)}</Typography>
       </Box>
-      <DynamicViewer markDown={query.markDown} />
+      <DynamicViewer markDown={markDown} />
     </Container>
   )
 }
 
 export default Post
+
+export const getStaticPaths = async () => {
+  const { data } = await API.graphql({
+    query: listPosts,
+    authMode: 'AWS_IAM',
+  })
+
+  const paths = data.listPosts.items.map(post => ({ params: { id: post.id } }))
+  return {
+    paths,
+    fallback: true,
+  }
+}
+
+export const getStaticProps = async ({ params }) => {
+  const { id } = params
+  const { data } = await API.graphql({
+    query: getPost,
+    variables: { id },
+    authMode: 'AWS_IAM',
+  })
+
+  return {
+    props: { post: data.getPost },
+  }
+}
