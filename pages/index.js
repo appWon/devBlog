@@ -1,6 +1,6 @@
 import React from 'react'
 import Item from '../components/Item'
-import SkeletonItem from '../components/skeletonItem'
+// import SkeletonItem from '../components/skeletonItem'
 import { API } from 'aws-amplify'
 import { Container } from '@mui/material'
 import { listPosts } from '../graphql/queries'

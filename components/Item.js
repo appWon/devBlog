@@ -9,13 +9,13 @@ import {
 import { useRouter } from 'next/router'
 import { formatDate } from '../lib/formatTime'
 
-const Item = ({ id, tags, title, markDown, createdAt, description }) => {
+const Item = ({ id, tags, title, createdAt, description }) => {
   const router = useRouter()
 
   const handleClickItem = id => {
     router.push({
       pathname: `post/${id}`,
-      query: { id, tags, title, markDown, createdAt, description },
+      // query: { id, tags, title, markDown, createdAt, description },
     })
   }
 
