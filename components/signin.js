@@ -19,7 +19,7 @@ const SignIn = ({ setUser }) => {
       const result = await Auth.signIn(signInData.id, signInData.password)
       setUser(result.getUsername())
     } catch (err) {
-      alert('관리자 전용입니다')
+      alert('아이디, 패스워드를 확인해 주세요')
     }
   }
 
