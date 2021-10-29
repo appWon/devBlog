@@ -5,30 +5,8 @@ import { API } from 'aws-amplify'
 import { Container } from '@mui/material'
 import { listPosts } from '../graphql/queries'
 
-const Page = () => {
-  const [posts, setPosts] = React.useState([])
-  const [loading, setLoading] = React.useState(false)
-
-  const fetchPosts = async () => {
-    setLoading(true)
-
-    try {
-      const { data } = await API.graphql({
-        query: listPosts,
-        authMode: 'AWS_IAM',
-      })
-
-      setPosts(data.listPosts.items)
-    } catch (err) {
-      console.log('error : ', err)
-    }
-
-    setLoading(false)
-  }
-
-  React.useEffect(() => {
-    fetchPosts()
-  }, [])
+const Page = props => {
+  const { posts } = props
 
   return (
     <Container
@@ -39,21 +17,34 @@ const Page = () => {
         justifyContent: 'center',
       }}
     >
-      {!loading
-        ? posts.map(post => (
-            <Item
-              key={`post_${post.id}`}
-              id={post.id}
-              tags={post.tags}
-              title={post.title}
-              markDown={post.markDown}
-              createdAt={post.createdAt}
-              description={post.description}
-            />
-          ))
-        : [...Array(3)].map((_, i) => <SkeletonItem key={`skeleton_${i}`} />)}
+      {posts.map(post => (
+        <Item
+          key={`post_${post.id}`}
+          id={post.id}
+          tags={post.tags}
+          title={post.title}
+          markDown={post.markDown}
+          createdAt={post.createdAt}
+          description={post.description}
+        />
+      ))}
     </Container>
   )
 }
 
 export default Page
+
+export const getServerSideProps = async () => {
+  try {
+    const { data } = await API.graphql({
+      query: listPosts,
+      authMode: 'AWS_IAM',
+    })
+
+    return {
+      props: { posts: data.listPosts.items },
+    }
+  } catch (err) {
+    console.log('error : ', err)
+  }
+}
