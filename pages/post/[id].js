@@ -1,15 +1,11 @@
 import React from 'react'
-import dynamic from 'next/dynamic'
 import { API } from 'aws-amplify'
 import { useRouter } from 'next/router'
 import { Container, Typography, Box, Button } from '@mui/material'
 import { formatDate } from '../../lib/formatTime'
 import { deletePost } from '../../graphql/mutations'
 import { listPosts, getPost } from '../../graphql/queries'
-
-const DynamicViewer = dynamic(() => import('../../components/viewer'), {
-  ssr: false,
-})
+import { MarkDown } from '../../components/markDown'
 
 const Post = ({ post }) => {
   const { push } = useRouter()
@@ -89,7 +85,7 @@ const Post = ({ post }) => {
         </Typography>
         <Typography>{formatDate(createdAt)}</Typography>
       </Box>
-      <DynamicViewer markDown={markDown} />
+      <MarkDown>{markDown}</MarkDown>
     </Container>
   )
 }
@@ -105,7 +101,7 @@ export const getStaticPaths = async () => {
   const paths = data.listPosts.items.map(post => ({ params: { id: post.id } }))
   return {
     paths,
-    fallback: true,
+    fallback: false,
   }
 }
 
