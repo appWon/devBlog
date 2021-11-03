@@ -9,32 +9,34 @@ const Page = props => {
   const { posts } = props
 
   return (
-    <Container
-      maxWidth="md"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}
-    >
-      {posts.map(post => (
-        <Item
-          key={`post_${post.id}`}
-          id={post.id}
-          tags={post.tags}
-          title={post.title}
-          markDown={post.markDown}
-          createdAt={post.createdAt}
-          description={post.description}
-        />
-      ))}
-    </Container>
+    <>
+      <Container
+        maxWidth="md"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        {posts.map(post => (
+          <Item
+            key={`post_${post.id}`}
+            id={post.id}
+            tags={post.tags}
+            title={post.title}
+            markDown={post.markDown}
+            createdAt={post.createdAt}
+            description={post.description}
+          />
+        ))}
+      </Container>
+    </>
   )
 }
 
 export default Page
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   try {
     const { data } = await API.graphql({
       query: listPosts,

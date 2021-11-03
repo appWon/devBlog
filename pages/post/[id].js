@@ -6,10 +6,11 @@ import { formatDate } from '../../lib/formatTime'
 import { deletePost } from '../../graphql/mutations'
 import { listPosts, getPost } from '../../graphql/queries'
 import { MarkDown } from '../../components/markDown'
+import { NextSeo } from 'next-seo'
 
 const Post = ({ post }) => {
   const { push } = useRouter()
-  const { id, tags, title, createdAt, markDown } = post
+  const { id, tags, title, createdAt, markDown, description } = post
 
   const handleClickUpdate = () => {
     push({
@@ -34,59 +35,82 @@ const Post = ({ post }) => {
   }
 
   return (
-    <Container maxWidth="md" sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box>
-        <Button
-          onClick={handleClickUpdate}
-          sx={{ justifyContent: 'start', minWidth: 'auto' }}
-        >
-          수정
-        </Button>
-        <Button
-          onClick={handleClickDelete}
-          sx={{ justifyContent: 'start', minWidth: 'auto' }}
-        >
-          삭제
-        </Button>
-      </Box>
-      <Box sx={{ paddingBottom: 3 }}>
-        <Box sx={{ display: 'flex', padding: '0 8px' }}>
-          {typeof tags === 'object' ? (
-            tags.map(tag => (
+    <>
+      <NextSeo
+        description={description}
+        title={`${title} - JJ Dev Blog`}
+        canonical={`https://jjblog.ga/post/${id}`}
+        openGraph={{
+          url: `https://jjblog.ga/post/${id}`,
+          title: `${title} - JJ Dev Blog`,
+          description,
+          images: [
+            {
+              url: 'https://images.velog.io/images/app235/post/5d7839b2-a362-450b-a67d-876f42d5bc0f/thumbnail.png',
+              width: 800,
+              height: 600,
+              alt: `JJ개발 블로그 이미지`,
+            },
+          ],
+        }}
+      />
+      <Container
+        maxWidth="md"
+        sx={{ display: 'flex', flexDirection: 'column' }}
+      >
+        <Box>
+          <Button
+            onClick={handleClickUpdate}
+            sx={{ justifyContent: 'start', minWidth: 'auto' }}
+          >
+            수정
+          </Button>
+          <Button
+            onClick={handleClickDelete}
+            sx={{ justifyContent: 'start', minWidth: 'auto' }}
+          >
+            삭제
+          </Button>
+        </Box>
+        <Box sx={{ paddingBottom: 3 }}>
+          <Box sx={{ display: 'flex', padding: '0 8px' }}>
+            {typeof tags === 'object' ? (
+              tags.map(tag => (
+                <Typography
+                  key={`${id}_${tag}`}
+                  sx={{
+                    fontSize: '0.875rem',
+                    fontWeight: 400,
+                    marginRight: 1,
+                  }}
+                >
+                  #{tag}
+                </Typography>
+              ))
+            ) : (
               <Typography
-                key={`${id}_${tag}`}
+                key={`${id}_${tags}`}
                 sx={{
                   fontSize: '0.875rem',
                   fontWeight: 400,
                   marginRight: 1,
                 }}
               >
-                #{tag}
+                #{tags}
               </Typography>
-            ))
-          ) : (
-            <Typography
-              key={`${id}_${tags}`}
-              sx={{
-                fontSize: '0.875rem',
-                fontWeight: 400,
-                marginRight: 1,
-              }}
-            >
-              #{tags}
-            </Typography>
-          )}
+            )}
+          </Box>
+          <Typography
+            component="h1"
+            sx={{ fontSize: '2.5rem', fontWeight: 600, lineHeight: 1.3 }}
+          >
+            {title}
+          </Typography>
+          <Typography>{formatDate(createdAt)}</Typography>
         </Box>
-        <Typography
-          component="h1"
-          sx={{ fontSize: '2.5rem', fontWeight: 600, lineHeight: 1.3 }}
-        >
-          {title}
-        </Typography>
-        <Typography>{formatDate(createdAt)}</Typography>
-      </Box>
-      <MarkDown>{markDown}</MarkDown>
-    </Container>
+        <MarkDown>{markDown}</MarkDown>
+      </Container>
+    </>
   )
 }
 

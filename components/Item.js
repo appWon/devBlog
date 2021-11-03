@@ -15,7 +15,6 @@ const Item = ({ id, tags, title, createdAt, description }) => {
   const handleClickItem = id => {
     router.push({
       pathname: `post/${id}`,
-      // query: { id, tags, title, markDown, createdAt, description },
     })
   }
 
